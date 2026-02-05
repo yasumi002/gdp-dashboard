@@ -1,0 +1,2538 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "authorship_tag": "ABX9TyMS02O/gnTCp9fNHBVOwqEI",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/yasumi002/gdp-dashboard/blob/main/imersao_de_python.py\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 55,
+      "metadata": {
+        "id": "Q51NRoz4xZYZ"
+      },
+      "outputs": [],
+      "source": [
+        "import pandas as pd"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "df = pd.read_csv(\"https://raw.githubusercontent.com/guilhermeonrails/data-jobs/refs/heads/main/salaries.csv\")"
+      ],
+      "metadata": {
+        "id": "DsOkS0aHUs4W"
+      },
+      "execution_count": 56,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "df.head()"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 313
+        },
+        "id": "qiDMkfrKWEZN",
+        "outputId": "e03cb343-9aa7-40f7-9dba-290281e338c3"
+      },
+      "execution_count": 57,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "   work_year experience_level employment_type           job_title  salary  \\\n",
+              "0     2025.0               SE              FT  Solutions Engineer  214000   \n",
+              "1     2025.0               SE              FT  Solutions Engineer  136000   \n",
+              "2     2025.0               MI              FT       Data Engineer  158800   \n",
+              "3     2025.0               MI              FT       Data Engineer  139200   \n",
+              "4     2025.0               EN              FT       Data Engineer   90000   \n",
+              "\n",
+              "  salary_currency  salary_in_usd employee_residence  remote_ratio  \\\n",
+              "0             USD         214000                 US           100   \n",
+              "1             USD         136000                 US           100   \n",
+              "2             USD         158800                 AU             0   \n",
+              "3             USD         139200                 AU             0   \n",
+              "4             USD          90000                 US             0   \n",
+              "\n",
+              "  company_location company_size  \n",
+              "0               US            M  \n",
+              "1               US            M  \n",
+              "2               AU            M  \n",
+              "3               AU            M  \n",
+              "4               US            M  "
+            ],
+            "text/html": [
+              "\n",
+              "  <div id=\"df-86659829-2f82-4d24-8112-001b49c9167f\" class=\"colab-df-container\">\n",
+              "    <div>\n",
+              "<style scoped>\n",
+              "    .dataframe tbody tr th:only-of-type {\n",
+              "        vertical-align: middle;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe tbody tr th {\n",
+              "        vertical-align: top;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe thead th {\n",
+              "        text-align: right;\n",
+              "    }\n",
+              "</style>\n",
+              "<table border=\"1\" class=\"dataframe\">\n",
+              "  <thead>\n",
+              "    <tr style=\"text-align: right;\">\n",
+              "      <th></th>\n",
+              "      <th>work_year</th>\n",
+              "      <th>experience_level</th>\n",
+              "      <th>employment_type</th>\n",
+              "      <th>job_title</th>\n",
+              "      <th>salary</th>\n",
+              "      <th>salary_currency</th>\n",
+              "      <th>salary_in_usd</th>\n",
+              "      <th>employee_residence</th>\n",
+              "      <th>remote_ratio</th>\n",
+              "      <th>company_location</th>\n",
+              "      <th>company_size</th>\n",
+              "    </tr>\n",
+              "  </thead>\n",
+              "  <tbody>\n",
+              "    <tr>\n",
+              "      <th>0</th>\n",
+              "      <td>2025.0</td>\n",
+              "      <td>SE</td>\n",
+              "      <td>FT</td>\n",
+              "      <td>Solutions Engineer</td>\n",
+              "      <td>214000</td>\n",
+              "      <td>USD</td>\n",
+              "      <td>214000</td>\n",
+              "      <td>US</td>\n",
+              "      <td>100</td>\n",
+              "      <td>US</td>\n",
+              "      <td>M</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>1</th>\n",
+              "      <td>2025.0</td>\n",
+              "      <td>SE</td>\n",
+              "      <td>FT</td>\n",
+              "      <td>Solutions Engineer</td>\n",
+              "      <td>136000</td>\n",
+              "      <td>USD</td>\n",
+              "      <td>136000</td>\n",
+              "      <td>US</td>\n",
+              "      <td>100</td>\n",
+              "      <td>US</td>\n",
+              "      <td>M</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>2</th>\n",
+              "      <td>2025.0</td>\n",
+              "      <td>MI</td>\n",
+              "      <td>FT</td>\n",
+              "      <td>Data Engineer</td>\n",
+              "      <td>158800</td>\n",
+              "      <td>USD</td>\n",
+              "      <td>158800</td>\n",
+              "      <td>AU</td>\n",
+              "      <td>0</td>\n",
+              "      <td>AU</td>\n",
+              "      <td>M</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>3</th>\n",
+              "      <td>2025.0</td>\n",
+              "      <td>MI</td>\n",
+              "      <td>FT</td>\n",
+              "      <td>Data Engineer</td>\n",
+              "      <td>139200</td>\n",
+              "      <td>USD</td>\n",
+              "      <td>139200</td>\n",
+              "      <td>AU</td>\n",
+              "      <td>0</td>\n",
+              "      <td>AU</td>\n",
+              "      <td>M</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>4</th>\n",
+              "      <td>2025.0</td>\n",
+              "      <td>EN</td>\n",
+              "      <td>FT</td>\n",
+              "      <td>Data Engineer</td>\n",
+              "      <td>90000</td>\n",
+              "      <td>USD</td>\n",
+              "      <td>90000</td>\n",
+              "      <td>US</td>\n",
+              "      <td>0</td>\n",
+              "      <td>US</td>\n",
+              "      <td>M</td>\n",
+              "    </tr>\n",
+              "  </tbody>\n",
+              "</table>\n",
+              "</div>\n",
+              "    <div class=\"colab-df-buttons\">\n",
+              "\n",
+              "  <div class=\"colab-df-container\">\n",
+              "    <button class=\"colab-df-convert\" onclick=\"convertToInteractive('df-86659829-2f82-4d24-8112-001b49c9167f')\"\n",
+              "            title=\"Convert this dataframe to an interactive table.\"\n",
+              "            style=\"display:none;\">\n",
+              "\n",
+              "  <svg xmlns=\"http://www.w3.org/2000/svg\" height=\"24px\" viewBox=\"0 -960 960 960\">\n",
+              "    <path d=\"M120-120v-720h720v720H120Zm60-500h600v-160H180v160Zm220 220h160v-160H400v160Zm0 220h160v-160H400v160ZM180-400h160v-160H180v160Zm440 0h160v-160H620v160ZM180-180h160v-160H180v160Zm440 0h160v-160H620v160Z\"/>\n",
+              "  </svg>\n",
+              "    </button>\n",
+              "\n",
+              "  <style>\n",
+              "    .colab-df-container {\n",
+              "      display:flex;\n",
+              "      gap: 12px;\n",
+              "    }\n",
+              "\n",
+              "    .colab-df-convert {\n",
+              "      background-color: #E8F0FE;\n",
+              "      border: none;\n",
+              "      border-radius: 50%;\n",
+              "      cursor: pointer;\n",
+              "      display: none;\n",
+              "      fill: #1967D2;\n",
+              "      height: 32px;\n",
+              "      padding: 0 0 0 0;\n",
+              "      width: 32px;\n",
+              "    }\n",
+              "\n",
+              "    .colab-df-convert:hover {\n",
+              "      background-color: #E2EBFA;\n",
+              "      box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);\n",
+              "      fill: #174EA6;\n",
+              "    }\n",
+              "\n",
+              "    .colab-df-buttons div {\n",
+              "      margin-bottom: 4px;\n",
+              "    }\n",
+              "\n",
+              "    [theme=dark] .colab-df-convert {\n",
+              "      background-color: #3B4455;\n",
+              "      fill: #D2E3FC;\n",
+              "    }\n",
+              "\n",
+              "    [theme=dark] .colab-df-convert:hover {\n",
+              "      background-color: #434B5C;\n",
+              "      box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);\n",
+              "      filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));\n",
+              "      fill: #FFFFFF;\n",
+              "    }\n",
+              "  </style>\n",
+              "\n",
+              "    <script>\n",
+              "      const buttonEl =\n",
+              "        document.querySelector('#df-86659829-2f82-4d24-8112-001b49c9167f button.colab-df-convert');\n",
+              "      buttonEl.style.display =\n",
+              "        google.colab.kernel.accessAllowed ? 'block' : 'none';\n",
+              "\n",
+              "      async function convertToInteractive(key) {\n",
+              "        const element = document.querySelector('#df-86659829-2f82-4d24-8112-001b49c9167f');\n",
+              "        const dataTable =\n",
+              "          await google.colab.kernel.invokeFunction('convertToInteractive',\n",
+              "                                                    [key], {});\n",
+              "        if (!dataTable) return;\n",
+              "\n",
+              "        const docLinkHtml = 'Like what you see? Visit the ' +\n",
+              "          '<a target=\"_blank\" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'\n",
+              "          + ' to learn more about interactive tables.';\n",
+              "        element.innerHTML = '';\n",
+              "        dataTable['output_type'] = 'display_data';\n",
+              "        await google.colab.output.renderOutput(dataTable, element);\n",
+              "        const docLink = document.createElement('div');\n",
+              "        docLink.innerHTML = docLinkHtml;\n",
+              "        element.appendChild(docLink);\n",
+              "      }\n",
+              "    </script>\n",
+              "  </div>\n",
+              "\n",
+              "\n",
+              "    </div>\n",
+              "  </div>\n"
+            ],
+            "application/vnd.google.colaboratory.intrinsic+json": {
+              "type": "dataframe",
+              "variable_name": "df"
+            }
+          },
+          "metadata": {},
+          "execution_count": 57
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "df.info()"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "E5PQ8k0gWlTt",
+        "outputId": "3de6c556-3772-4243-8a4a-e455bca0adf2"
+      },
+      "execution_count": 58,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "<class 'pandas.core.frame.DataFrame'>\n",
+            "RangeIndex: 133349 entries, 0 to 133348\n",
+            "Data columns (total 11 columns):\n",
+            " #   Column              Non-Null Count   Dtype  \n",
+            "---  ------              --------------   -----  \n",
+            " 0   work_year           133339 non-null  float64\n",
+            " 1   experience_level    133349 non-null  object \n",
+            " 2   employment_type     133349 non-null  object \n",
+            " 3   job_title           133349 non-null  object \n",
+            " 4   salary              133349 non-null  int64  \n",
+            " 5   salary_currency     133349 non-null  object \n",
+            " 6   salary_in_usd       133349 non-null  int64  \n",
+            " 7   employee_residence  133349 non-null  object \n",
+            " 8   remote_ratio        133349 non-null  int64  \n",
+            " 9   company_location    133349 non-null  object \n",
+            " 10  company_size        133349 non-null  object \n",
+            "dtypes: float64(1), int64(3), object(7)\n",
+            "memory usage: 11.2+ MB\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "df.describe()"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 300
+        },
+        "id": "uQfT-tYlXU6Y",
+        "outputId": "3b6f2628-636a-4cf5-adaa-af745e9405f8"
+      },
+      "execution_count": 59,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "           work_year        salary  salary_in_usd   remote_ratio\n",
+              "count  133339.000000  1.333490e+05  133349.000000  133349.000000\n",
+              "mean     2024.358770  1.632833e+05  157617.272098      20.905669\n",
+              "std         0.680627  2.173860e+05   74288.363097      40.590044\n",
+              "min      2020.000000  1.400000e+04   15000.000000       0.000000\n",
+              "25%      2024.000000  1.060200e+05  106000.000000       0.000000\n",
+              "50%      2024.000000  1.470000e+05  146206.000000       0.000000\n",
+              "75%      2025.000000  1.990000e+05  198000.000000       0.000000\n",
+              "max      2025.000000  3.040000e+07  800000.000000     100.000000"
+            ],
+            "text/html": [
+              "\n",
+              "  <div id=\"df-fd369788-7231-4111-8f78-4418059a5c03\" class=\"colab-df-container\">\n",
+              "    <div>\n",
+              "<style scoped>\n",
+              "    .dataframe tbody tr th:only-of-type {\n",
+              "        vertical-align: middle;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe tbody tr th {\n",
+              "        vertical-align: top;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe thead th {\n",
+              "        text-align: right;\n",
+              "    }\n",
+              "</style>\n",
+              "<table border=\"1\" class=\"dataframe\">\n",
+              "  <thead>\n",
+              "    <tr style=\"text-align: right;\">\n",
+              "      <th></th>\n",
+              "      <th>work_year</th>\n",
+              "      <th>salary</th>\n",
+              "      <th>salary_in_usd</th>\n",
+              "      <th>remote_ratio</th>\n",
+              "    </tr>\n",
+              "  </thead>\n",
+              "  <tbody>\n",
+              "    <tr>\n",
+              "      <th>count</th>\n",
+              "      <td>133339.000000</td>\n",
+              "      <td>1.333490e+05</td>\n",
+              "      <td>133349.000000</td>\n",
+              "      <td>133349.000000</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>mean</th>\n",
+              "      <td>2024.358770</td>\n",
+              "      <td>1.632833e+05</td>\n",
+              "      <td>157617.272098</td>\n",
+              "      <td>20.905669</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>std</th>\n",
+              "      <td>0.680627</td>\n",
+              "      <td>2.173860e+05</td>\n",
+              "      <td>74288.363097</td>\n",
+              "      <td>40.590044</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>min</th>\n",
+              "      <td>2020.000000</td>\n",
+              "      <td>1.400000e+04</td>\n",
+              "      <td>15000.000000</td>\n",
+              "      <td>0.000000</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>25%</th>\n",
+              "      <td>2024.000000</td>\n",
+              "      <td>1.060200e+05</td>\n",
+              "      <td>106000.000000</td>\n",
+              "      <td>0.000000</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>50%</th>\n",
+              "      <td>2024.000000</td>\n",
+              "      <td>1.470000e+05</td>\n",
+              "      <td>146206.000000</td>\n",
+              "      <td>0.000000</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>75%</th>\n",
+              "      <td>2025.000000</td>\n",
+              "      <td>1.990000e+05</td>\n",
+              "      <td>198000.000000</td>\n",
+              "      <td>0.000000</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>max</th>\n",
+              "      <td>2025.000000</td>\n",
+              "      <td>3.040000e+07</td>\n",
+              "      <td>800000.000000</td>\n",
+              "      <td>100.000000</td>\n",
+              "    </tr>\n",
+              "  </tbody>\n",
+              "</table>\n",
+              "</div>\n",
+              "    <div class=\"colab-df-buttons\">\n",
+              "\n",
+              "  <div class=\"colab-df-container\">\n",
+              "    <button class=\"colab-df-convert\" onclick=\"convertToInteractive('df-fd369788-7231-4111-8f78-4418059a5c03')\"\n",
+              "            title=\"Convert this dataframe to an interactive table.\"\n",
+              "            style=\"display:none;\">\n",
+              "\n",
+              "  <svg xmlns=\"http://www.w3.org/2000/svg\" height=\"24px\" viewBox=\"0 -960 960 960\">\n",
+              "    <path d=\"M120-120v-720h720v720H120Zm60-500h600v-160H180v160Zm220 220h160v-160H400v160Zm0 220h160v-160H400v160ZM180-400h160v-160H180v160Zm440 0h160v-160H620v160ZM180-180h160v-160H180v160Zm440 0h160v-160H620v160Z\"/>\n",
+              "  </svg>\n",
+              "    </button>\n",
+              "\n",
+              "  <style>\n",
+              "    .colab-df-container {\n",
+              "      display:flex;\n",
+              "      gap: 12px;\n",
+              "    }\n",
+              "\n",
+              "    .colab-df-convert {\n",
+              "      background-color: #E8F0FE;\n",
+              "      border: none;\n",
+              "      border-radius: 50%;\n",
+              "      cursor: pointer;\n",
+              "      display: none;\n",
+              "      fill: #1967D2;\n",
+              "      height: 32px;\n",
+              "      padding: 0 0 0 0;\n",
+              "      width: 32px;\n",
+              "    }\n",
+              "\n",
+              "    .colab-df-convert:hover {\n",
+              "      background-color: #E2EBFA;\n",
+              "      box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);\n",
+              "      fill: #174EA6;\n",
+              "    }\n",
+              "\n",
+              "    .colab-df-buttons div {\n",
+              "      margin-bottom: 4px;\n",
+              "    }\n",
+              "\n",
+              "    [theme=dark] .colab-df-convert {\n",
+              "      background-color: #3B4455;\n",
+              "      fill: #D2E3FC;\n",
+              "    }\n",
+              "\n",
+              "    [theme=dark] .colab-df-convert:hover {\n",
+              "      background-color: #434B5C;\n",
+              "      box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);\n",
+              "      filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));\n",
+              "      fill: #FFFFFF;\n",
+              "    }\n",
+              "  </style>\n",
+              "\n",
+              "    <script>\n",
+              "      const buttonEl =\n",
+              "        document.querySelector('#df-fd369788-7231-4111-8f78-4418059a5c03 button.colab-df-convert');\n",
+              "      buttonEl.style.display =\n",
+              "        google.colab.kernel.accessAllowed ? 'block' : 'none';\n",
+              "\n",
+              "      async function convertToInteractive(key) {\n",
+              "        const element = document.querySelector('#df-fd369788-7231-4111-8f78-4418059a5c03');\n",
+              "        const dataTable =\n",
+              "          await google.colab.kernel.invokeFunction('convertToInteractive',\n",
+              "                                                    [key], {});\n",
+              "        if (!dataTable) return;\n",
+              "\n",
+              "        const docLinkHtml = 'Like what you see? Visit the ' +\n",
+              "          '<a target=\"_blank\" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'\n",
+              "          + ' to learn more about interactive tables.';\n",
+              "        element.innerHTML = '';\n",
+              "        dataTable['output_type'] = 'display_data';\n",
+              "        await google.colab.output.renderOutput(dataTable, element);\n",
+              "        const docLink = document.createElement('div');\n",
+              "        docLink.innerHTML = docLinkHtml;\n",
+              "        element.appendChild(docLink);\n",
+              "      }\n",
+              "    </script>\n",
+              "  </div>\n",
+              "\n",
+              "\n",
+              "    </div>\n",
+              "  </div>\n"
+            ],
+            "application/vnd.google.colaboratory.intrinsic+json": {
+              "type": "dataframe",
+              "summary": "{\n  \"name\": \"df\",\n  \"rows\": 8,\n  \"fields\": [\n    {\n      \"column\": \"work_year\",\n      \"properties\": {\n        \"dtype\": \"number\",\n        \"std\": 46534.52447764897,\n        \"min\": 0.6806266087844866,\n        \"max\": 133339.0,\n        \"num_unique_values\": 6,\n        \"samples\": [\n          133339.0,\n          2024.3587697522855,\n          2025.0\n        ],\n        \"semantic_type\": \"\",\n        \"description\": \"\"\n      }\n    },\n    {\n      \"column\": \"salary\",\n      \"properties\": {\n        \"dtype\": \"number\",\n        \"std\": 10698704.831573008,\n        \"min\": 14000.0,\n        \"max\": 30400000.0,\n        \"num_unique_values\": 8,\n        \"samples\": [\n          163283.32258959571,\n          147000.0,\n          133349.0\n        ],\n        \"semantic_type\": \"\",\n        \"description\": \"\"\n      }\n    },\n    {\n      \"column\": \"salary_in_usd\",\n      \"properties\": {\n        \"dtype\": \"number\",\n        \"std\": 247237.56078114995,\n        \"min\": 15000.0,\n        \"max\": 800000.0,\n        \"num_unique_values\": 8,\n        \"samples\": [\n          157617.27209802848,\n          146206.0,\n          133349.0\n        ],\n        \"semantic_type\": \"\",\n        \"description\": \"\"\n      }\n    },\n    {\n      \"column\": \"remote_ratio\",\n      \"properties\": {\n        \"dtype\": \"number\",\n        \"std\": 47137.84698309967,\n        \"min\": 0.0,\n        \"max\": 133349.0,\n        \"num_unique_values\": 5,\n        \"samples\": [\n          20.905668583941388,\n          100.0,\n          40.590044190108124\n        ],\n        \"semantic_type\": \"\",\n        \"description\": \"\"\n      }\n    }\n  ]\n}"
+            }
+          },
+          "metadata": {},
+          "execution_count": 59
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "df.shape"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "wDw3cdo9YTxK",
+        "outputId": "e0978caa-a0f1-4d67-ac55-a7d068633838"
+      },
+      "execution_count": 60,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "(133349, 11)"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 60
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "linhas, colunas = df.shape [0], df.shape[1]\n",
+        "print(\"linhas:\", linhas)\n",
+        "print(\"colunas:\", colunas)"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "hIC1GLWUYwHK",
+        "outputId": "2dcbc721-5f84-4e5e-9bef-5ab286ca43de"
+      },
+      "execution_count": 61,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "linhas: 133349\n",
+            "colunas: 11\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "df.columns"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "jnnCSsSvbIzc",
+        "outputId": "77479322-51c9-4b97-86d9-0dc634d9306e"
+      },
+      "execution_count": 62,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "Index(['work_year', 'experience_level', 'employment_type', 'job_title',\n",
+              "       'salary', 'salary_currency', 'salary_in_usd', 'employee_residence',\n",
+              "       'remote_ratio', 'company_location', 'company_size'],\n",
+              "      dtype='object')"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 62
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "df.rename(columns={\n",
+        "    'work_year': 'ano',\n",
+        "    'experience_level': 'nivel_experiencia',\n",
+        "    'employment_type': 'tipo_emprego',\n",
+        "    'job_title': 'cargo',\n",
+        "    'salary': 'salario',\n",
+        "    'salary_currency': 'moeda_salario',\n",
+        "    'salary_in_usd': 'salario_em_usd',\n",
+        "    'employee_residence': 'residencia_empregado',\n",
+        "    'remote_ratio': 'taxa_remoto',\n",
+        "    'company_location': 'localizacao_empresa',\n",
+        "    'company_size': 'tamanho_empresa'\n",
+        "}, inplace=True)\n",
+        "\n",
+        "print(\"Colunas traduzidas com sucesso!\")\n",
+        "print(\"Novas colunas:\", df.columns.tolist())"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "kf9GetZNbQfg",
+        "outputId": "52f313d7-f0a9-4bcc-c40a-0ffa657db07f"
+      },
+      "execution_count": 63,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Colunas traduzidas com sucesso!\n",
+            "Novas colunas: ['ano', 'nivel_experiencia', 'tipo_emprego', 'cargo', 'salario', 'moeda_salario', 'salario_em_usd', 'residencia_empregado', 'taxa_remoto', 'localizacao_empresa', 'tamanho_empresa']\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "df['nivel_experiencia'].value_counts()"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 241
+        },
+        "id": "SQBa6vb5grWC",
+        "outputId": "49572b68-fb81-43ad-b4f1-8e3d9426a326"
+      },
+      "execution_count": 64,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "nivel_experiencia\n",
+              "SE    77241\n",
+              "MI    40465\n",
+              "EN    12443\n",
+              "EX     3200\n",
+              "Name: count, dtype: int64"
+            ],
+            "text/html": [
+              "<div>\n",
+              "<style scoped>\n",
+              "    .dataframe tbody tr th:only-of-type {\n",
+              "        vertical-align: middle;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe tbody tr th {\n",
+              "        vertical-align: top;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe thead th {\n",
+              "        text-align: right;\n",
+              "    }\n",
+              "</style>\n",
+              "<table border=\"1\" class=\"dataframe\">\n",
+              "  <thead>\n",
+              "    <tr style=\"text-align: right;\">\n",
+              "      <th></th>\n",
+              "      <th>count</th>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>nivel_experiencia</th>\n",
+              "      <th></th>\n",
+              "    </tr>\n",
+              "  </thead>\n",
+              "  <tbody>\n",
+              "    <tr>\n",
+              "      <th>SE</th>\n",
+              "      <td>77241</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>MI</th>\n",
+              "      <td>40465</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>EN</th>\n",
+              "      <td>12443</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>EX</th>\n",
+              "      <td>3200</td>\n",
+              "    </tr>\n",
+              "  </tbody>\n",
+              "</table>\n",
+              "</div><br><label><b>dtype:</b> int64</label>"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 64
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import pandas as pd\n",
+        "\n",
+        "df = pd.read_csv(\"https://raw.githubusercontent.com/guilhermeonrails/data-jobs/refs/heads/main/salaries.csv\")\n",
+        "\n",
+        "novos_nomes = {\n",
+        "    'work_year': 'ano',\n",
+        "    'experience_level': 'senioridade',\n",
+        "    'employment_type': 'contrato',\n",
+        "    'job_title': 'cargo',\n",
+        "    'salary': 'salario',\n",
+        "    'salary_currency': 'moeda',\n",
+        "    'salary_in_usd': 'usd',\n",
+        "    'employee_residence': 'residencia',\n",
+        "    'remote_ratio': 'remoto',\n",
+        "    'company_location': 'empresa',\n",
+        "    'company_size': 'tamanho_empresa'\n",
+        "}\n",
+        "\n",
+        "df.rename(columns=novos_nomes, inplace=True)\n",
+        "df.head()"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 206
+        },
+        "id": "yfScTOHE_rch",
+        "outputId": "2950fba4-e231-4cb0-959d-7a6da76d9605"
+      },
+      "execution_count": 65,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "      ano senioridade contrato               cargo  salario moeda     usd  \\\n",
+              "0  2025.0          SE       FT  Solutions Engineer   214000   USD  214000   \n",
+              "1  2025.0          SE       FT  Solutions Engineer   136000   USD  136000   \n",
+              "2  2025.0          MI       FT       Data Engineer   158800   USD  158800   \n",
+              "3  2025.0          MI       FT       Data Engineer   139200   USD  139200   \n",
+              "4  2025.0          EN       FT       Data Engineer    90000   USD   90000   \n",
+              "\n",
+              "  residencia  remoto empresa tamanho_empresa  \n",
+              "0         US     100      US               M  \n",
+              "1         US     100      US               M  \n",
+              "2         AU       0      AU               M  \n",
+              "3         AU       0      AU               M  \n",
+              "4         US       0      US               M  "
+            ],
+            "text/html": [
+              "\n",
+              "  <div id=\"df-a7b7edf1-a95d-4b20-8d79-e7a2fcbe7989\" class=\"colab-df-container\">\n",
+              "    <div>\n",
+              "<style scoped>\n",
+              "    .dataframe tbody tr th:only-of-type {\n",
+              "        vertical-align: middle;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe tbody tr th {\n",
+              "        vertical-align: top;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe thead th {\n",
+              "        text-align: right;\n",
+              "    }\n",
+              "</style>\n",
+              "<table border=\"1\" class=\"dataframe\">\n",
+              "  <thead>\n",
+              "    <tr style=\"text-align: right;\">\n",
+              "      <th></th>\n",
+              "      <th>ano</th>\n",
+              "      <th>senioridade</th>\n",
+              "      <th>contrato</th>\n",
+              "      <th>cargo</th>\n",
+              "      <th>salario</th>\n",
+              "      <th>moeda</th>\n",
+              "      <th>usd</th>\n",
+              "      <th>residencia</th>\n",
+              "      <th>remoto</th>\n",
+              "      <th>empresa</th>\n",
+              "      <th>tamanho_empresa</th>\n",
+              "    </tr>\n",
+              "  </thead>\n",
+              "  <tbody>\n",
+              "    <tr>\n",
+              "      <th>0</th>\n",
+              "      <td>2025.0</td>\n",
+              "      <td>SE</td>\n",
+              "      <td>FT</td>\n",
+              "      <td>Solutions Engineer</td>\n",
+              "      <td>214000</td>\n",
+              "      <td>USD</td>\n",
+              "      <td>214000</td>\n",
+              "      <td>US</td>\n",
+              "      <td>100</td>\n",
+              "      <td>US</td>\n",
+              "      <td>M</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>1</th>\n",
+              "      <td>2025.0</td>\n",
+              "      <td>SE</td>\n",
+              "      <td>FT</td>\n",
+              "      <td>Solutions Engineer</td>\n",
+              "      <td>136000</td>\n",
+              "      <td>USD</td>\n",
+              "      <td>136000</td>\n",
+              "      <td>US</td>\n",
+              "      <td>100</td>\n",
+              "      <td>US</td>\n",
+              "      <td>M</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>2</th>\n",
+              "      <td>2025.0</td>\n",
+              "      <td>MI</td>\n",
+              "      <td>FT</td>\n",
+              "      <td>Data Engineer</td>\n",
+              "      <td>158800</td>\n",
+              "      <td>USD</td>\n",
+              "      <td>158800</td>\n",
+              "      <td>AU</td>\n",
+              "      <td>0</td>\n",
+              "      <td>AU</td>\n",
+              "      <td>M</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>3</th>\n",
+              "      <td>2025.0</td>\n",
+              "      <td>MI</td>\n",
+              "      <td>FT</td>\n",
+              "      <td>Data Engineer</td>\n",
+              "      <td>139200</td>\n",
+              "      <td>USD</td>\n",
+              "      <td>139200</td>\n",
+              "      <td>AU</td>\n",
+              "      <td>0</td>\n",
+              "      <td>AU</td>\n",
+              "      <td>M</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>4</th>\n",
+              "      <td>2025.0</td>\n",
+              "      <td>EN</td>\n",
+              "      <td>FT</td>\n",
+              "      <td>Data Engineer</td>\n",
+              "      <td>90000</td>\n",
+              "      <td>USD</td>\n",
+              "      <td>90000</td>\n",
+              "      <td>US</td>\n",
+              "      <td>0</td>\n",
+              "      <td>US</td>\n",
+              "      <td>M</td>\n",
+              "    </tr>\n",
+              "  </tbody>\n",
+              "</table>\n",
+              "</div>\n",
+              "    <div class=\"colab-df-buttons\">\n",
+              "\n",
+              "  <div class=\"colab-df-container\">\n",
+              "    <button class=\"colab-df-convert\" onclick=\"convertToInteractive('df-a7b7edf1-a95d-4b20-8d79-e7a2fcbe7989')\"\n",
+              "            title=\"Convert this dataframe to an interactive table.\"\n",
+              "            style=\"display:none;\">\n",
+              "\n",
+              "  <svg xmlns=\"http://www.w3.org/2000/svg\" height=\"24px\" viewBox=\"0 -960 960 960\">\n",
+              "    <path d=\"M120-120v-720h720v720H120Zm60-500h600v-160H180v160Zm220 220h160v-160H400v160Zm0 220h160v-160H400v160ZM180-400h160v-160H180v160Zm440 0h160v-160H620v160ZM180-180h160v-160H180v160Zm440 0h160v-160H620v160Z\"/>\n",
+              "  </svg>\n",
+              "    </button>\n",
+              "\n",
+              "  <style>\n",
+              "    .colab-df-container {\n",
+              "      display:flex;\n",
+              "      gap: 12px;\n",
+              "    }\n",
+              "\n",
+              "    .colab-df-convert {\n",
+              "      background-color: #E8F0FE;\n",
+              "      border: none;\n",
+              "      border-radius: 50%;\n",
+              "      cursor: pointer;\n",
+              "      display: none;\n",
+              "      fill: #1967D2;\n",
+              "      height: 32px;\n",
+              "      padding: 0 0 0 0;\n",
+              "      width: 32px;\n",
+              "    }\n",
+              "\n",
+              "    .colab-df-convert:hover {\n",
+              "      background-color: #E2EBFA;\n",
+              "      box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);\n",
+              "      fill: #174EA6;\n",
+              "    }\n",
+              "\n",
+              "    .colab-df-buttons div {\n",
+              "      margin-bottom: 4px;\n",
+              "    }\n",
+              "\n",
+              "    [theme=dark] .colab-df-convert {\n",
+              "      background-color: #3B4455;\n",
+              "      fill: #D2E3FC;\n",
+              "    }\n",
+              "\n",
+              "    [theme=dark] .colab-df-convert:hover {\n",
+              "      background-color: #434B5C;\n",
+              "      box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);\n",
+              "      filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));\n",
+              "      fill: #FFFFFF;\n",
+              "    }\n",
+              "  </style>\n",
+              "\n",
+              "    <script>\n",
+              "      const buttonEl =\n",
+              "        document.querySelector('#df-a7b7edf1-a95d-4b20-8d79-e7a2fcbe7989 button.colab-df-convert');\n",
+              "      buttonEl.style.display =\n",
+              "        google.colab.kernel.accessAllowed ? 'block' : 'none';\n",
+              "\n",
+              "      async function convertToInteractive(key) {\n",
+              "        const element = document.querySelector('#df-a7b7edf1-a95d-4b20-8d79-e7a2fcbe7989');\n",
+              "        const dataTable =\n",
+              "          await google.colab.kernel.invokeFunction('convertToInteractive',\n",
+              "                                                    [key], {});\n",
+              "        if (!dataTable) return;\n",
+              "\n",
+              "        const docLinkHtml = 'Like what you see? Visit the ' +\n",
+              "          '<a target=\"_blank\" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'\n",
+              "          + ' to learn more about interactive tables.';\n",
+              "        element.innerHTML = '';\n",
+              "        dataTable['output_type'] = 'display_data';\n",
+              "        await google.colab.output.renderOutput(dataTable, element);\n",
+              "        const docLink = document.createElement('div');\n",
+              "        docLink.innerHTML = docLinkHtml;\n",
+              "        element.appendChild(docLink);\n",
+              "      }\n",
+              "    </script>\n",
+              "  </div>\n",
+              "\n",
+              "\n",
+              "    </div>\n",
+              "  </div>\n"
+            ],
+            "application/vnd.google.colaboratory.intrinsic+json": {
+              "type": "dataframe",
+              "variable_name": "df"
+            }
+          },
+          "metadata": {},
+          "execution_count": 65
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "df['senioridade'].value_counts()\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 241
+        },
+        "id": "QycmBmwrCJww",
+        "outputId": "688b443e-046b-4e31-b12c-df9ef27f7c58"
+      },
+      "execution_count": 66,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "senioridade\n",
+              "SE    77241\n",
+              "MI    40465\n",
+              "EN    12443\n",
+              "EX     3200\n",
+              "Name: count, dtype: int64"
+            ],
+            "text/html": [
+              "<div>\n",
+              "<style scoped>\n",
+              "    .dataframe tbody tr th:only-of-type {\n",
+              "        vertical-align: middle;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe tbody tr th {\n",
+              "        vertical-align: top;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe thead th {\n",
+              "        text-align: right;\n",
+              "    }\n",
+              "</style>\n",
+              "<table border=\"1\" class=\"dataframe\">\n",
+              "  <thead>\n",
+              "    <tr style=\"text-align: right;\">\n",
+              "      <th></th>\n",
+              "      <th>count</th>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>senioridade</th>\n",
+              "      <th></th>\n",
+              "    </tr>\n",
+              "  </thead>\n",
+              "  <tbody>\n",
+              "    <tr>\n",
+              "      <th>SE</th>\n",
+              "      <td>77241</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>MI</th>\n",
+              "      <td>40465</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>EN</th>\n",
+              "      <td>12443</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>EX</th>\n",
+              "      <td>3200</td>\n",
+              "    </tr>\n",
+              "  </tbody>\n",
+              "</table>\n",
+              "</div><br><label><b>dtype:</b> int64</label>"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 66
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "df['contrato'].value_counts()"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 241
+        },
+        "id": "veEH2J2ZCWql",
+        "outputId": "776bcddf-e1a8-443c-c58b-0c3c28912b29"
+      },
+      "execution_count": 67,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "contrato\n",
+              "FT    132563\n",
+              "CT       394\n",
+              "PT       376\n",
+              "FL        16\n",
+              "Name: count, dtype: int64"
+            ],
+            "text/html": [
+              "<div>\n",
+              "<style scoped>\n",
+              "    .dataframe tbody tr th:only-of-type {\n",
+              "        vertical-align: middle;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe tbody tr th {\n",
+              "        vertical-align: top;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe thead th {\n",
+              "        text-align: right;\n",
+              "    }\n",
+              "</style>\n",
+              "<table border=\"1\" class=\"dataframe\">\n",
+              "  <thead>\n",
+              "    <tr style=\"text-align: right;\">\n",
+              "      <th></th>\n",
+              "      <th>count</th>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>contrato</th>\n",
+              "      <th></th>\n",
+              "    </tr>\n",
+              "  </thead>\n",
+              "  <tbody>\n",
+              "    <tr>\n",
+              "      <th>FT</th>\n",
+              "      <td>132563</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>CT</th>\n",
+              "      <td>394</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>PT</th>\n",
+              "      <td>376</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>FL</th>\n",
+              "      <td>16</td>\n",
+              "    </tr>\n",
+              "  </tbody>\n",
+              "</table>\n",
+              "</div><br><label><b>dtype:</b> int64</label>"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 67
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "df['remoto'].value_counts()"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 210
+        },
+        "id": "QKLG5pEQCbOt",
+        "outputId": "c19f5d0f-e479-4a6f-98e3-37c20613a7f3"
+      },
+      "execution_count": 68,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "remoto\n",
+              "0      105312\n",
+              "100     27718\n",
+              "50        319\n",
+              "Name: count, dtype: int64"
+            ],
+            "text/html": [
+              "<div>\n",
+              "<style scoped>\n",
+              "    .dataframe tbody tr th:only-of-type {\n",
+              "        vertical-align: middle;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe tbody tr th {\n",
+              "        vertical-align: top;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe thead th {\n",
+              "        text-align: right;\n",
+              "    }\n",
+              "</style>\n",
+              "<table border=\"1\" class=\"dataframe\">\n",
+              "  <thead>\n",
+              "    <tr style=\"text-align: right;\">\n",
+              "      <th></th>\n",
+              "      <th>count</th>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>remoto</th>\n",
+              "      <th></th>\n",
+              "    </tr>\n",
+              "  </thead>\n",
+              "  <tbody>\n",
+              "    <tr>\n",
+              "      <th>0</th>\n",
+              "      <td>105312</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>100</th>\n",
+              "      <td>27718</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>50</th>\n",
+              "      <td>319</td>\n",
+              "    </tr>\n",
+              "  </tbody>\n",
+              "</table>\n",
+              "</div><br><label><b>dtype:</b> int64</label>"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 68
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "df['tamanho_empresa'].value_counts()"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 210
+        },
+        "id": "kcM22CwYChXh",
+        "outputId": "d1a0f97a-7e6d-4482-f4f9-c16d45120b9e"
+      },
+      "execution_count": 69,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "tamanho_empresa\n",
+              "M    129561\n",
+              "L      3574\n",
+              "S       214\n",
+              "Name: count, dtype: int64"
+            ],
+            "text/html": [
+              "<div>\n",
+              "<style scoped>\n",
+              "    .dataframe tbody tr th:only-of-type {\n",
+              "        vertical-align: middle;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe tbody tr th {\n",
+              "        vertical-align: top;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe thead th {\n",
+              "        text-align: right;\n",
+              "    }\n",
+              "</style>\n",
+              "<table border=\"1\" class=\"dataframe\">\n",
+              "  <thead>\n",
+              "    <tr style=\"text-align: right;\">\n",
+              "      <th></th>\n",
+              "      <th>count</th>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>tamanho_empresa</th>\n",
+              "      <th></th>\n",
+              "    </tr>\n",
+              "  </thead>\n",
+              "  <tbody>\n",
+              "    <tr>\n",
+              "      <th>M</th>\n",
+              "      <td>129561</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>L</th>\n",
+              "      <td>3574</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>S</th>\n",
+              "      <td>214</td>\n",
+              "    </tr>\n",
+              "  </tbody>\n",
+              "</table>\n",
+              "</div><br><label><b>dtype:</b> int64</label>"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 69
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "senioridade = {\n",
+        "    'SE': 'senior',\n",
+        "    'MI': 'pleno',\n",
+        "    'EN': 'junior',\n",
+        "    'EX': 'executivo'\n",
+        "}\n",
+        "df['senioridade'] = df['senioridade'].replace(senioridade)\n",
+        "df['senioridade'].value_counts()"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 241
+        },
+        "id": "4M3VremXCjzl",
+        "outputId": "57563e88-fa7e-4863-91dd-6480d55c162f"
+      },
+      "execution_count": 70,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "senioridade\n",
+              "senior       77241\n",
+              "pleno        40465\n",
+              "junior       12443\n",
+              "executivo     3200\n",
+              "Name: count, dtype: int64"
+            ],
+            "text/html": [
+              "<div>\n",
+              "<style scoped>\n",
+              "    .dataframe tbody tr th:only-of-type {\n",
+              "        vertical-align: middle;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe tbody tr th {\n",
+              "        vertical-align: top;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe thead th {\n",
+              "        text-align: right;\n",
+              "    }\n",
+              "</style>\n",
+              "<table border=\"1\" class=\"dataframe\">\n",
+              "  <thead>\n",
+              "    <tr style=\"text-align: right;\">\n",
+              "      <th></th>\n",
+              "      <th>count</th>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>senioridade</th>\n",
+              "      <th></th>\n",
+              "    </tr>\n",
+              "  </thead>\n",
+              "  <tbody>\n",
+              "    <tr>\n",
+              "      <th>senior</th>\n",
+              "      <td>77241</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>pleno</th>\n",
+              "      <td>40465</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>junior</th>\n",
+              "      <td>12443</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>executivo</th>\n",
+              "      <td>3200</td>\n",
+              "    </tr>\n",
+              "  </tbody>\n",
+              "</table>\n",
+              "</div><br><label><b>dtype:</b> int64</label>"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 70
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "contrato = {\n",
+        "    'FT': 'integral',\n",
+        "    'PT': 'parcial',\n",
+        "    'CT': 'contrato',\n",
+        "    'FL': 'freelancer'\n",
+        "}\n",
+        "df['contrato'] = df['contrato'].replace(contrato)\n",
+        "df['contrato'].value_counts()"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 241
+        },
+        "id": "DkVVT_WMCvjR",
+        "outputId": "01b91a33-51ba-42b5-abc7-faf8e69d3e52"
+      },
+      "execution_count": 71,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "contrato\n",
+              "integral      132563\n",
+              "contrato         394\n",
+              "parcial          376\n",
+              "freelancer        16\n",
+              "Name: count, dtype: int64"
+            ],
+            "text/html": [
+              "<div>\n",
+              "<style scoped>\n",
+              "    .dataframe tbody tr th:only-of-type {\n",
+              "        vertical-align: middle;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe tbody tr th {\n",
+              "        vertical-align: top;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe thead th {\n",
+              "        text-align: right;\n",
+              "    }\n",
+              "</style>\n",
+              "<table border=\"1\" class=\"dataframe\">\n",
+              "  <thead>\n",
+              "    <tr style=\"text-align: right;\">\n",
+              "      <th></th>\n",
+              "      <th>count</th>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>contrato</th>\n",
+              "      <th></th>\n",
+              "    </tr>\n",
+              "  </thead>\n",
+              "  <tbody>\n",
+              "    <tr>\n",
+              "      <th>integral</th>\n",
+              "      <td>132563</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>contrato</th>\n",
+              "      <td>394</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>parcial</th>\n",
+              "      <td>376</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>freelancer</th>\n",
+              "      <td>16</td>\n",
+              "    </tr>\n",
+              "  </tbody>\n",
+              "</table>\n",
+              "</div><br><label><b>dtype:</b> int64</label>"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 71
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "tamanho_empresa = {\n",
+        "    'L': 'grande',\n",
+        "    'S': 'pequena',\n",
+        "    'M':\t'media'\n",
+        "\n",
+        "}\n",
+        "df['tamanho_empresa'] = df['tamanho_empresa'].replace(tamanho_empresa)\n",
+        "df['tamanho_empresa'].value_counts()"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 210
+        },
+        "id": "8UFZfSTLC0n4",
+        "outputId": "36d689fd-6ded-427a-dfbe-3de4da85433f"
+      },
+      "execution_count": 72,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "tamanho_empresa\n",
+              "media      129561\n",
+              "grande       3574\n",
+              "pequena       214\n",
+              "Name: count, dtype: int64"
+            ],
+            "text/html": [
+              "<div>\n",
+              "<style scoped>\n",
+              "    .dataframe tbody tr th:only-of-type {\n",
+              "        vertical-align: middle;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe tbody tr th {\n",
+              "        vertical-align: top;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe thead th {\n",
+              "        text-align: right;\n",
+              "    }\n",
+              "</style>\n",
+              "<table border=\"1\" class=\"dataframe\">\n",
+              "  <thead>\n",
+              "    <tr style=\"text-align: right;\">\n",
+              "      <th></th>\n",
+              "      <th>count</th>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>tamanho_empresa</th>\n",
+              "      <th></th>\n",
+              "    </tr>\n",
+              "  </thead>\n",
+              "  <tbody>\n",
+              "    <tr>\n",
+              "      <th>media</th>\n",
+              "      <td>129561</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>grande</th>\n",
+              "      <td>3574</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>pequena</th>\n",
+              "      <td>214</td>\n",
+              "    </tr>\n",
+              "  </tbody>\n",
+              "</table>\n",
+              "</div><br><label><b>dtype:</b> int64</label>"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 72
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "mapa_trabalho = {\n",
+        "    0: 'presencial',\n",
+        "    100: 'remoto',\n",
+        "    50: 'hibrido'\n",
+        "}\n",
+        "\n",
+        "df['remoto'] = df['remoto'].replace(mapa_trabalho)\n",
+        "df['remoto'].value_counts()"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 210
+        },
+        "id": "YXn4EicLC8Wm",
+        "outputId": "c65dd6ba-8213-4b7b-aec6-d577a2ebf644"
+      },
+      "execution_count": 73,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "remoto\n",
+              "presencial    105312\n",
+              "remoto         27718\n",
+              "hibrido          319\n",
+              "Name: count, dtype: int64"
+            ],
+            "text/html": [
+              "<div>\n",
+              "<style scoped>\n",
+              "    .dataframe tbody tr th:only-of-type {\n",
+              "        vertical-align: middle;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe tbody tr th {\n",
+              "        vertical-align: top;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe thead th {\n",
+              "        text-align: right;\n",
+              "    }\n",
+              "</style>\n",
+              "<table border=\"1\" class=\"dataframe\">\n",
+              "  <thead>\n",
+              "    <tr style=\"text-align: right;\">\n",
+              "      <th></th>\n",
+              "      <th>count</th>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>remoto</th>\n",
+              "      <th></th>\n",
+              "    </tr>\n",
+              "  </thead>\n",
+              "  <tbody>\n",
+              "    <tr>\n",
+              "      <th>presencial</th>\n",
+              "      <td>105312</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>remoto</th>\n",
+              "      <td>27718</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>hibrido</th>\n",
+              "      <td>319</td>\n",
+              "    </tr>\n",
+              "  </tbody>\n",
+              "</table>\n",
+              "</div><br><label><b>dtype:</b> int64</label>"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 73
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "df.head()"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 206
+        },
+        "id": "gkqkYWdZDAy9",
+        "outputId": "136ca5f9-c9c5-4c74-f93a-6dce2eb71acc"
+      },
+      "execution_count": 74,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "      ano senioridade  contrato               cargo  salario moeda     usd  \\\n",
+              "0  2025.0      senior  integral  Solutions Engineer   214000   USD  214000   \n",
+              "1  2025.0      senior  integral  Solutions Engineer   136000   USD  136000   \n",
+              "2  2025.0       pleno  integral       Data Engineer   158800   USD  158800   \n",
+              "3  2025.0       pleno  integral       Data Engineer   139200   USD  139200   \n",
+              "4  2025.0      junior  integral       Data Engineer    90000   USD   90000   \n",
+              "\n",
+              "  residencia      remoto empresa tamanho_empresa  \n",
+              "0         US      remoto      US           media  \n",
+              "1         US      remoto      US           media  \n",
+              "2         AU  presencial      AU           media  \n",
+              "3         AU  presencial      AU           media  \n",
+              "4         US  presencial      US           media  "
+            ],
+            "text/html": [
+              "\n",
+              "  <div id=\"df-d7b80599-880e-4288-86ab-d973355ee58a\" class=\"colab-df-container\">\n",
+              "    <div>\n",
+              "<style scoped>\n",
+              "    .dataframe tbody tr th:only-of-type {\n",
+              "        vertical-align: middle;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe tbody tr th {\n",
+              "        vertical-align: top;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe thead th {\n",
+              "        text-align: right;\n",
+              "    }\n",
+              "</style>\n",
+              "<table border=\"1\" class=\"dataframe\">\n",
+              "  <thead>\n",
+              "    <tr style=\"text-align: right;\">\n",
+              "      <th></th>\n",
+              "      <th>ano</th>\n",
+              "      <th>senioridade</th>\n",
+              "      <th>contrato</th>\n",
+              "      <th>cargo</th>\n",
+              "      <th>salario</th>\n",
+              "      <th>moeda</th>\n",
+              "      <th>usd</th>\n",
+              "      <th>residencia</th>\n",
+              "      <th>remoto</th>\n",
+              "      <th>empresa</th>\n",
+              "      <th>tamanho_empresa</th>\n",
+              "    </tr>\n",
+              "  </thead>\n",
+              "  <tbody>\n",
+              "    <tr>\n",
+              "      <th>0</th>\n",
+              "      <td>2025.0</td>\n",
+              "      <td>senior</td>\n",
+              "      <td>integral</td>\n",
+              "      <td>Solutions Engineer</td>\n",
+              "      <td>214000</td>\n",
+              "      <td>USD</td>\n",
+              "      <td>214000</td>\n",
+              "      <td>US</td>\n",
+              "      <td>remoto</td>\n",
+              "      <td>US</td>\n",
+              "      <td>media</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>1</th>\n",
+              "      <td>2025.0</td>\n",
+              "      <td>senior</td>\n",
+              "      <td>integral</td>\n",
+              "      <td>Solutions Engineer</td>\n",
+              "      <td>136000</td>\n",
+              "      <td>USD</td>\n",
+              "      <td>136000</td>\n",
+              "      <td>US</td>\n",
+              "      <td>remoto</td>\n",
+              "      <td>US</td>\n",
+              "      <td>media</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>2</th>\n",
+              "      <td>2025.0</td>\n",
+              "      <td>pleno</td>\n",
+              "      <td>integral</td>\n",
+              "      <td>Data Engineer</td>\n",
+              "      <td>158800</td>\n",
+              "      <td>USD</td>\n",
+              "      <td>158800</td>\n",
+              "      <td>AU</td>\n",
+              "      <td>presencial</td>\n",
+              "      <td>AU</td>\n",
+              "      <td>media</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>3</th>\n",
+              "      <td>2025.0</td>\n",
+              "      <td>pleno</td>\n",
+              "      <td>integral</td>\n",
+              "      <td>Data Engineer</td>\n",
+              "      <td>139200</td>\n",
+              "      <td>USD</td>\n",
+              "      <td>139200</td>\n",
+              "      <td>AU</td>\n",
+              "      <td>presencial</td>\n",
+              "      <td>AU</td>\n",
+              "      <td>media</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>4</th>\n",
+              "      <td>2025.0</td>\n",
+              "      <td>junior</td>\n",
+              "      <td>integral</td>\n",
+              "      <td>Data Engineer</td>\n",
+              "      <td>90000</td>\n",
+              "      <td>USD</td>\n",
+              "      <td>90000</td>\n",
+              "      <td>US</td>\n",
+              "      <td>presencial</td>\n",
+              "      <td>US</td>\n",
+              "      <td>media</td>\n",
+              "    </tr>\n",
+              "  </tbody>\n",
+              "</table>\n",
+              "</div>\n",
+              "    <div class=\"colab-df-buttons\">\n",
+              "\n",
+              "  <div class=\"colab-df-container\">\n",
+              "    <button class=\"colab-df-convert\" onclick=\"convertToInteractive('df-d7b80599-880e-4288-86ab-d973355ee58a')\"\n",
+              "            title=\"Convert this dataframe to an interactive table.\"\n",
+              "            style=\"display:none;\">\n",
+              "\n",
+              "  <svg xmlns=\"http://www.w3.org/2000/svg\" height=\"24px\" viewBox=\"0 -960 960 960\">\n",
+              "    <path d=\"M120-120v-720h720v720H120Zm60-500h600v-160H180v160Zm220 220h160v-160H400v160Zm0 220h160v-160H400v160ZM180-400h160v-160H180v160Zm440 0h160v-160H620v160ZM180-180h160v-160H180v160Zm440 0h160v-160H620v160Z\"/>\n",
+              "  </svg>\n",
+              "    </button>\n",
+              "\n",
+              "  <style>\n",
+              "    .colab-df-container {\n",
+              "      display:flex;\n",
+              "      gap: 12px;\n",
+              "    }\n",
+              "\n",
+              "    .colab-df-convert {\n",
+              "      background-color: #E8F0FE;\n",
+              "      border: none;\n",
+              "      border-radius: 50%;\n",
+              "      cursor: pointer;\n",
+              "      display: none;\n",
+              "      fill: #1967D2;\n",
+              "      height: 32px;\n",
+              "      padding: 0 0 0 0;\n",
+              "      width: 32px;\n",
+              "    }\n",
+              "\n",
+              "    .colab-df-convert:hover {\n",
+              "      background-color: #E2EBFA;\n",
+              "      box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);\n",
+              "      fill: #174EA6;\n",
+              "    }\n",
+              "\n",
+              "    .colab-df-buttons div {\n",
+              "      margin-bottom: 4px;\n",
+              "    }\n",
+              "\n",
+              "    [theme=dark] .colab-df-convert {\n",
+              "      background-color: #3B4455;\n",
+              "      fill: #D2E3FC;\n",
+              "    }\n",
+              "\n",
+              "    [theme=dark] .colab-df-convert:hover {\n",
+              "      background-color: #434B5C;\n",
+              "      box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);\n",
+              "      filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));\n",
+              "      fill: #FFFFFF;\n",
+              "    }\n",
+              "  </style>\n",
+              "\n",
+              "    <script>\n",
+              "      const buttonEl =\n",
+              "        document.querySelector('#df-d7b80599-880e-4288-86ab-d973355ee58a button.colab-df-convert');\n",
+              "      buttonEl.style.display =\n",
+              "        google.colab.kernel.accessAllowed ? 'block' : 'none';\n",
+              "\n",
+              "      async function convertToInteractive(key) {\n",
+              "        const element = document.querySelector('#df-d7b80599-880e-4288-86ab-d973355ee58a');\n",
+              "        const dataTable =\n",
+              "          await google.colab.kernel.invokeFunction('convertToInteractive',\n",
+              "                                                    [key], {});\n",
+              "        if (!dataTable) return;\n",
+              "\n",
+              "        const docLinkHtml = 'Like what you see? Visit the ' +\n",
+              "          '<a target=\"_blank\" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'\n",
+              "          + ' to learn more about interactive tables.';\n",
+              "        element.innerHTML = '';\n",
+              "        dataTable['output_type'] = 'display_data';\n",
+              "        await google.colab.output.renderOutput(dataTable, element);\n",
+              "        const docLink = document.createElement('div');\n",
+              "        docLink.innerHTML = docLinkHtml;\n",
+              "        element.appendChild(docLink);\n",
+              "      }\n",
+              "    </script>\n",
+              "  </div>\n",
+              "\n",
+              "\n",
+              "    </div>\n",
+              "  </div>\n"
+            ],
+            "application/vnd.google.colaboratory.intrinsic+json": {
+              "type": "dataframe",
+              "variable_name": "df"
+            }
+          },
+          "metadata": {},
+          "execution_count": 74
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "df.describe(include='object')"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 287
+        },
+        "id": "jmlMqzAvDnFQ",
+        "outputId": "dad4102c-61d5-4fd9-fcaf-06421f5cf2be"
+      },
+      "execution_count": 75,
+      "outputs": [
+        {
+          "output_type": "error",
+          "ename": "KeyboardInterrupt",
+          "evalue": "",
+          "traceback": [
+            "\u001b[0;31m---------------------------------------------------------------------------\u001b[0m",
+            "\u001b[0;31mKeyboardInterrupt\u001b[0m                         Traceback (most recent call last)",
+            "\u001b[0;32m/tmp/ipython-input-87514550.py\u001b[0m in \u001b[0;36m<cell line: 0>\u001b[0;34m()\u001b[0m\n\u001b[0;32m----> 1\u001b[0;31m \u001b[0mdf\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mdescribe\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0minclude\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0;34m'object'\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m",
+            "\u001b[0;32m/usr/local/lib/python3.12/dist-packages/pandas/core/generic.py\u001b[0m in \u001b[0;36mdescribe\u001b[0;34m(self, percentiles, include, exclude)\u001b[0m\n\u001b[1;32m  11974\u001b[0m         \u001b[0mmax\u001b[0m            \u001b[0mNaN\u001b[0m      \u001b[0;36m3.0\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m  11975\u001b[0m         \"\"\"\n\u001b[0;32m> 11976\u001b[0;31m         return describe_ndframe(\n\u001b[0m\u001b[1;32m  11977\u001b[0m             \u001b[0mobj\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0mself\u001b[0m\u001b[0;34m,\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m  11978\u001b[0m             \u001b[0minclude\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0minclude\u001b[0m\u001b[0;34m,\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+            "\u001b[0;32m/usr/local/lib/python3.12/dist-packages/pandas/core/methods/describe.py\u001b[0m in \u001b[0;36mdescribe_ndframe\u001b[0;34m(obj, include, exclude, percentiles)\u001b[0m\n\u001b[1;32m     95\u001b[0m         )\n\u001b[1;32m     96\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m---> 97\u001b[0;31m     \u001b[0mresult\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mdescriber\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mdescribe\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mpercentiles\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0mpercentiles\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m     98\u001b[0m     \u001b[0;32mreturn\u001b[0m \u001b[0mcast\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mNDFrameT\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mresult\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m     99\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n",
+            "\u001b[0;32m/usr/local/lib/python3.12/dist-packages/pandas/core/methods/describe.py\u001b[0m in \u001b[0;36mdescribe\u001b[0;34m(self, percentiles)\u001b[0m\n\u001b[1;32m    170\u001b[0m         \u001b[0;32mfor\u001b[0m \u001b[0m_\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mseries\u001b[0m \u001b[0;32min\u001b[0m \u001b[0mdata\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mitems\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    171\u001b[0m             \u001b[0mdescribe_func\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mselect_describe_func\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mseries\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m--> 172\u001b[0;31m             \u001b[0mldesc\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mappend\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mdescribe_func\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mseries\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mpercentiles\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m    173\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    174\u001b[0m         \u001b[0mcol_names\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mreorder_columns\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mldesc\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+            "\u001b[0;32m/usr/local/lib/python3.12/dist-packages/pandas/core/methods/describe.py\u001b[0m in \u001b[0;36mdescribe_categorical_1d\u001b[0;34m(data, percentiles_ignored)\u001b[0m\n\u001b[1;32m    281\u001b[0m         \u001b[0mdtype\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0;34m\"object\"\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    282\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m--> 283\u001b[0;31m     \u001b[0mresult\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0;34m[\u001b[0m\u001b[0mdata\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mcount\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mcount_unique\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mtop\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mfreq\u001b[0m\u001b[0;34m]\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m    284\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    285\u001b[0m     \u001b[0;32mfrom\u001b[0m \u001b[0mpandas\u001b[0m \u001b[0;32mimport\u001b[0m \u001b[0mSeries\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+            "\u001b[0;32m/usr/local/lib/python3.12/dist-packages/pandas/core/series.py\u001b[0m in \u001b[0;36mcount\u001b[0;34m(self)\u001b[0m\n\u001b[1;32m   2280\u001b[0m         \u001b[0;36m2\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m   2281\u001b[0m         \"\"\"\n\u001b[0;32m-> 2282\u001b[0;31m         \u001b[0;32mreturn\u001b[0m \u001b[0mnotna\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0m_values\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0msum\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mastype\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m\"int64\"\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m   2283\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m   2284\u001b[0m     \u001b[0;32mdef\u001b[0m \u001b[0mmode\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mself\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mdropna\u001b[0m\u001b[0;34m:\u001b[0m \u001b[0mbool\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0;32mTrue\u001b[0m\u001b[0;34m)\u001b[0m \u001b[0;34m->\u001b[0m \u001b[0mSeries\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+            "\u001b[0;32m/usr/local/lib/python3.12/dist-packages/pandas/core/dtypes/missing.py\u001b[0m in \u001b[0;36mnotna\u001b[0;34m(obj)\u001b[0m\n\u001b[1;32m    455\u001b[0m     \u001b[0mName\u001b[0m\u001b[0;34m:\u001b[0m \u001b[0;36m1\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mdtype\u001b[0m\u001b[0;34m:\u001b[0m \u001b[0mbool\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    456\u001b[0m     \"\"\"\n\u001b[0;32m--> 457\u001b[0;31m     \u001b[0mres\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0misna\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mobj\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m    458\u001b[0m     \u001b[0;32mif\u001b[0m \u001b[0misinstance\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mres\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mbool\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    459\u001b[0m         \u001b[0;32mreturn\u001b[0m \u001b[0;32mnot\u001b[0m \u001b[0mres\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+            "\u001b[0;32m/usr/local/lib/python3.12/dist-packages/pandas/core/dtypes/missing.py\u001b[0m in \u001b[0;36misna\u001b[0;34m(obj)\u001b[0m\n\u001b[1;32m    176\u001b[0m     \u001b[0mName\u001b[0m\u001b[0;34m:\u001b[0m \u001b[0;36m1\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mdtype\u001b[0m\u001b[0;34m:\u001b[0m \u001b[0mbool\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    177\u001b[0m     \"\"\"\n\u001b[0;32m--> 178\u001b[0;31m     \u001b[0;32mreturn\u001b[0m \u001b[0m_isna\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mobj\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m    179\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    180\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n",
+            "\u001b[0;32m/usr/local/lib/python3.12/dist-packages/pandas/core/dtypes/missing.py\u001b[0m in \u001b[0;36m_isna\u001b[0;34m(obj, inf_as_na)\u001b[0m\n\u001b[1;32m    205\u001b[0m         \u001b[0;32mreturn\u001b[0m \u001b[0;32mFalse\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    206\u001b[0m     \u001b[0;32melif\u001b[0m \u001b[0misinstance\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mobj\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0;34m(\u001b[0m\u001b[0mnp\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mndarray\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mABCExtensionArray\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m--> 207\u001b[0;31m         \u001b[0;32mreturn\u001b[0m \u001b[0m_isna_array\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mobj\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0minf_as_na\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0minf_as_na\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m    208\u001b[0m     \u001b[0;32melif\u001b[0m \u001b[0misinstance\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mobj\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mABCIndex\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    209\u001b[0m         \u001b[0;31m# Try to use cached isna, which also short-circuits for integer dtypes\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+            "\u001b[0;32m/usr/local/lib/python3.12/dist-packages/pandas/core/dtypes/missing.py\u001b[0m in \u001b[0;36m_isna_array\u001b[0;34m(values, inf_as_na)\u001b[0m\n\u001b[1;32m    290\u001b[0m         \u001b[0mresult\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0m_isna_recarray_dtype\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mvalues\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0minf_as_na\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0minf_as_na\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    291\u001b[0m     \u001b[0;32melif\u001b[0m \u001b[0mis_string_or_object_np_dtype\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mvalues\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mdtype\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m--> 292\u001b[0;31m         \u001b[0mresult\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0m_isna_string_dtype\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mvalues\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0minf_as_na\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0minf_as_na\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m    293\u001b[0m     \u001b[0;32melif\u001b[0m \u001b[0mdtype\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mkind\u001b[0m \u001b[0;32min\u001b[0m \u001b[0;34m\"mM\"\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    294\u001b[0m         \u001b[0;31m# this is the NaT pattern\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+            "\u001b[0;32m/usr/local/lib/python3.12/dist-packages/pandas/core/dtypes/missing.py\u001b[0m in \u001b[0;36m_isna_string_dtype\u001b[0;34m(values, inf_as_na)\u001b[0m\n\u001b[1;32m    311\u001b[0m     \u001b[0;32melse\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    312\u001b[0m         \u001b[0;32mif\u001b[0m \u001b[0mvalues\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mndim\u001b[0m \u001b[0;32min\u001b[0m \u001b[0;34m{\u001b[0m\u001b[0;36m1\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0;36m2\u001b[0m\u001b[0;34m}\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m--> 313\u001b[0;31m             \u001b[0mresult\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mlibmissing\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0misnaobj\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mvalues\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0minf_as_na\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0minf_as_na\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m    314\u001b[0m         \u001b[0;32melse\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    315\u001b[0m             \u001b[0;31m# 0-D, reached via e.g. mask_missing\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+            "\u001b[0;31mKeyboardInterrupt\u001b[0m: "
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "df.head()"
+      ],
+      "metadata": {
+        "id": "ViZ2Y3NwD9mF"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "df.isnull()"
+      ],
+      "metadata": {
+        "id": "r8sQ0v1mEBxw"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "df.isnull().sum()"
+      ],
+      "metadata": {
+        "id": "klnbH9hUEWpq"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "df[\"ano\"].unique()"
+      ],
+      "metadata": {
+        "id": "gmm3XgDzFTk-"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "df[df.isnull().any(axis=1)]"
+      ],
+      "metadata": {
+        "id": "rZYB5UmwF1e-"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import numpy as np\n",
+        "\n",
+        "#criação de um dataframe e teste para exemplo\n",
+        "df_salarios = pd.DataFrame({\n",
+        "    'nome':['Ana', 'Bruno', 'João', 'Julia', 'Renato', 'Val'],\n",
+        "    'salario':[4000, np.nan, 5000, np.nan, np.nan, 10000]\n",
+        "})\n",
+        "#calcula a média, substitui os nulos e arrendonda os números\n",
+        "df_salarios['salario_media'] = df_salarios['salario'].fillna((df_salarios['salario'].mean()).round(2))\n",
+        "\n",
+        "#calcula mediana e substitui os nulos pela mediana\n",
+        "df_salarios['salario_media'] = df_salarios['salario'].fillna((df_salarios['salario'].median()))\n",
+        "\n",
+        "df_salarios"
+      ],
+      "metadata": {
+        "id": "_0WjHHtWJ7u_"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import pandas as pd\n",
+        "import numpy as np\n",
+        "\n",
+        "df_temperaturas = pd.DataFrame({\n",
+        "    'dia da semana' : ['domingo', 'segunda', 'terça', 'quarta', 'quinta', 'sexta', 'sábado'],\n",
+        "    'temperatura' : [30, np.nan, 32, 24, 19, np.nan, np.nan]\n",
+        "})\n",
+        "\n",
+        "df_temperaturas['preenchido_ffill'] = df_temperaturas['temperatura'].ffill()\n",
+        "df_temperaturas"
+      ],
+      "metadata": {
+        "id": "Mq_aiVl2uT3o"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import pandas as pd\n",
+        "import numpy as np\n",
+        "\n",
+        "df_cidades = pd.DataFrame({\n",
+        "    'nome': ['Ana', 'Bruno', 'Carlos', 'Daniele', 'Gustavo'],\n",
+        "    'cidade': ['São Paulo', 'Rio de Janeiro', np.nan, 'Belém', np.nan]\n",
+        "})\n",
+        "\n",
+        "df_cidades['cidade_preenchida'] = df_cidades['cidade'].fillna('não informado')\n",
+        "df_cidades"
+      ],
+      "metadata": {
+        "id": "L34m08PrItUO"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "df_limpo = df.dropna()"
+      ],
+      "metadata": {
+        "id": "IpcYkydfPFAT"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "df_limpo.isnull().sum()"
+      ],
+      "metadata": {
+        "id": "Yn0dEdEaz-l-"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "df_limpo.head()"
+      ],
+      "metadata": {
+        "id": "O_iZLxFT0g3n"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "df_limpo.info()"
+      ],
+      "metadata": {
+        "id": "9wBZ2y8k1Fll"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "df_limpo = df_limpo.assign(ano = df_limpo['ano'].astype('int64'))"
+      ],
+      "metadata": {
+        "id": "F5cR5zWC1d7z"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "df_limpo.head()"
+      ],
+      "metadata": {
+        "id": "POdONIkn3bxl"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "df_limpo['senioridade'].value_counts().plot(kind='bar', title = 'Distribuição de senioridade')"
+      ],
+      "metadata": {
+        "id": "JNfOgSYl3qRA"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import seaborn as sns"
+      ],
+      "metadata": {
+        "id": "GDQhYb8i5D1e"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "sns.barplot(data= df_limpo, x='senioridade', y='usd')"
+      ],
+      "metadata": {
+        "id": "qEWGASY56dne"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import matplotlib.pyplot as plt"
+      ],
+      "metadata": {
+        "id": "aH9kCgFV7XEo"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "plt.figure(figsize=(8,5))\n",
+        "sns.barplot(data= df_limpo, x='senioridade', y='usd')\n",
+        "plt.title('Distribuição de senioridade')\n",
+        "plt.xlabel('senioridade')\n",
+        "plt.ylabel('Salário médio anual (USD)')\n",
+        "plt.show()"
+      ],
+      "metadata": {
+        "id": "cVzHTovzN5nG"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "df_limpo.groupby('senioridade')['usd'].mean().sort_values(ascending=False)"
+      ],
+      "metadata": {
+        "id": "rIwrOBFuWgno"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "ordem = df_limpo.groupby('senioridade')['usd'].mean().sort_values(ascending=False).index"
+      ],
+      "metadata": {
+        "id": "ntwFPYfbq7Kq"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "plt.figure(figsize=(8,5))\n",
+        "sns.barplot(data= df_limpo, x='senioridade', y='usd', order = ordem)\n",
+        "plt.title('Distribuição de senioridade')\n",
+        "plt.xlabel('senioridade')\n",
+        "plt.ylabel('Salário médio anual (USD)')\n",
+        "plt.show()"
+      ],
+      "metadata": {
+        "id": "x-7uw_v2rFxQ"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "!pip install -q streamlit"
+      ],
+      "metadata": {
+        "id": "P5lexHiA5dtt"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import streamlit as st\n",
+        "import pandas as pd\n",
+        "import plotly.express as px\n",
+        "\n",
+        "st.set_page_config(\n",
+        "    page_title=\"Dashboard de Salários na Área de Dados\",\n",
+        "    page_icon=\"📊\",\n",
+        "    layout=\"wide\",\n",
+        ")\n",
+        "\n",
+        "# Usando o DataFrame `df_limpo` que já foi processado nas células anteriores\n",
+        "df = df_limpo.copy()\n",
+        "\n",
+        "# --- Barra Lateral (Filtros) ---\n",
+        "st.sidebar.header(\"🔍 Filtros\")\n",
+        "\n",
+        "# Filtro de Ano\n",
+        "anos_disponiveis = sorted(df['ano'].unique())\n",
+        "anos_selecionados = st.sidebar.multiselect(\"Ano\", anos_disponiveis, default=anos_disponiveis)\n",
+        "\n",
+        "# Filtro de Senioridade\n",
+        "senioridades_disponiveis = sorted(df['senioridade'].unique())\n",
+        "senioridades_selecionadas = st.sidebar.multiselect(\"Senioridade\", senioridades_disponiveis, default=senioridades_disponiveis)\n",
+        "\n",
+        "# Filtro por Tipo de Contrato\n",
+        "contratos_disponiveis = sorted(df['contrato'].unique())\n",
+        "contratos_selecionados = st.sidebar.multiselect(\"Tipo de Contrato\", contratos_disponiveis, default=contratos_disponiveis)\n",
+        "\n",
+        "# Filtro por Tamanho da Empresa\n",
+        "tamanhos_disponiveis = sorted(df['tamanho_empresa'].unique())\n",
+        "tamanhos_selecionados = st.sidebar.multiselect(\"Tamanho da Empresa\", tamanhos_disponiveis, default=tamanhos_disponiveis)\n",
+        "\n",
+        "# --- Filtragem do DataFrame ---\n",
+        "# O dataframe principal é filtrado com base nas seleções feitas na barra lateral.\n",
+        "df_filtrado = df[\n",
+        "    (df['ano'].isin(anos_selecionados)) &\n",
+        "    (df['senioridade'].isin(senioridades_selecionadas)) &\n",
+        "    (df['contrato'].isin(contratos_selecionados)) &\n",
+        "    (df['tamanho_empresa'].isin(tamanhos_selecionados))\n",
+        "]\n",
+        "\n",
+        "# --- Conteúdo Principal ---\n",
+        "st.title(\"🎲 Dashboard de Análise de Salários na Área de Dados\")\n",
+        "st.markdown(\"Explore os dados salariais na área de dados nos últimos anos. Utilize os filtros à esquerda para refinar sua análise.\")\n",
+        "\n",
+        "# --- Métricas Principais (KPIs) ---\n",
+        "st.subheader(\"Métricas gerais (Salário anual em USD)\")\n",
+        "\n",
+        "if not df_filtrado.empty:\n",
+        "    salario_medio = df_filtrado['usd'].mean()\n",
+        "    salario_maximo = df_filtrado['usd'].max()\n",
+        "    total_registros = df_filtrado.shape[0]\n",
+        "    cargo_mais_frequente = df_filtrado[\"cargo\"].mode()[0]\n",
+        "else:\n",
+        "    salario_medio, salario_maximo, total_registros, cargo_mais_frequente = 0, 0, 0, \"\"\n",
+        "\n",
+        "col1, col2, col3, col4 = st.columns(4)\n",
+        "col1.metric(\"Salário médio\", f\"{salario_medio:,.0f}\")\n",
+        "col2.metric(\"Salário máximo\", f\"{salario_maximo:,.0f}\")\n",
+        "col3.metric(\"Total de registros\", f\"{total_registros:,}\")\n",
+        "col4.metric(\"Cargo mais frequente\", cargo_mais_frequente)\n",
+        "\n",
+        "st.markdown(\"---\")\n",
+        "\n",
+        "# --- Análises Visuais com Plotly ---\n",
+        "st.subheader(\"Gráficos\")\n",
+        "\n",
+        "col_graf1, col_graf2 = st.columns(2)\n",
+        "\n",
+        "with col_graf1:\n",
+        "    if not df_filtrado.empty:\n",
+        "        top_cargos = df_filtrado.groupby('cargo')['usd'].mean().nlargest(10).sort_values(ascending=True).reset_index()\n",
+        "        grafico_cargos = px.bar(\n",
+        "            top_cargos,\n",
+        "            x='usd',\n",
+        "            y='cargo',\n",
+        "            orientation='h',\n",
+        "            title=\"Top 10 cargos por salário médio\",\n",
+        "            labels={'usd': 'Média salarial anual (USD)', 'cargo': ''}\n",
+        "        )\n",
+        "        grafico_cargos.update_layout(title_x=0.1, yaxis={'categoryorder':'total ascending'})\n",
+        "        st.plotly_chart(grafico_cargos, use_container_width=True)\n",
+        "    else:\n",
+        "        st.warning(\"Nenhum dado para exibir no gráfico de cargos.\")\n",
+        "\n",
+        "with col_graf2:\n",
+        "    if not df_filtrado.empty:\n",
+        "        grafico_hist = px.histogram(\n",
+        "            df_filtrado,\n",
+        "            x='usd',\n",
+        "            nbins=30,\n",
+        "            title=\"Distribuição de salários anuais\",\n",
+        "            labels={'usd': 'Faixa salarial (USD)', 'count': ''}\n",
+        "        )\n",
+        "        grafico_hist.update_layout(title_x=0.1)\n",
+        "        st.plotly_chart(grafico_hist, use_container_width=True)\n",
+        "    else:\n",
+        "        st.warning(\"Nenhum dado para exibir no gráfico de distribuição.\")\n",
+        "\n",
+        "col_graf3, col_graf4 = st.columns(2)\n",
+        "\n",
+        "with col_graf3:\n",
+        "    if not df_filtrado.empty:\n",
+        "        remoto_contagem = df_filtrado['remoto'].value_counts().reset_index()\n",
+        "        remoto_contagem.columns = ['tipo_trabalho', 'quantidade']\n",
+        "        grafico_remoto = px.pie(\n",
+        "            remoto_contagem,\n",
+        "            names='tipo_trabalho',\n",
+        "            values='quantidade',\n",
+        "            title='Proporção dos tipos de trabalho',\n",
+        "            hole=0.5\n",
+        "        )\n",
+        "        grafico_remoto.update_traces(textinfo='percent+label')\n",
+        "        grafico_remoto.update_layout(title_x=0.1)\n",
+        "        st.plotly_chart(grafico_remoto, use_container_width=True)\n",
+        "    else:\n",
+        "        st.warning(\"Nenhum dado para exibir no gráfico dos tipos de trabalho.\")\n",
+        "\n",
+        "with col_graf4:\n",
+        "    if not df_filtrado.empty:\n",
+        "        df_ds = df_filtrado[df_filtrado['cargo'] == 'Data Scientist']\n",
+        "        if not df_ds.empty:\n",
+        "            media_ds_pais = df_ds.groupby('residencia')['usd'].mean().reset_index()\n",
+        "            grafico_paises = px.choropleth(\n",
+        "                media_ds_pais,\n",
+        "                locations='residencia',\n",
+        "                color='usd',\n",
+        "                color_continuous_scale='rdylgn',\n",
+        "                title='Salário médio de Cientista de Dados por país',\n",
+        "                labels={'usd': 'Salário médio (USD)', 'residencia': 'País'}\n",
+        "            )\n",
+        "            grafico_paises.update_layout(title_x=0.1)\n",
+        "            st.plotly_chart(grafico_paises, use_container_width=True)\n",
+        "        else:\n",
+        "            st.warning(\"Nenhum dado de Cientista de Dados para exibir no gráfico de países.\")\n",
+        "    else:\n",
+        "        st.warning(\"Nenhum dado para exibir no gráfico de países.\")\n",
+        "\n",
+        "st.subheader(\"Dados Detalhados\")\n",
+        "st.dataframe(df_filtrado)\n",
+        "\n",
+        "# # Escreve o código no arquivo app.py\n",
+        "# with open(\"app.py\", \"w\") as file:\n",
+        "#     file.write(code)\n",
+        "\n",
+        "# print(\"Arquivo app.py criado com sucesso!\")"
+      ],
+      "metadata": {
+        "id": "1_smcr4I6rkl"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "7e6ace51"
+      },
+      "source": [
+        "code = '''\n",
+        "import streamlit as st\n",
+        "import pandas as pd\n",
+        "import plotly.express as px\n",
+        "\n",
+        "st.set_page_config(\n",
+        "    page_title=\"Dashboard de Salários na Área de Dados\",\n",
+        "    page_icon=\"📊\",\n",
+        "    layout=\"wide\",\n",
+        ")\n",
+        "\n",
+        "# Usando o DataFrame `df_limpo` que já foi processado nas células anteriores\n",
+        "df = df_limpo.copy()\n",
+        "\n",
+        "# --- Barra Lateral (Filtros) ---\n",
+        "st.sidebar.header(\"🔍 Filtros\")\n",
+        "\n",
+        "# Filtro de Ano\n",
+        "anos_disponiveis = sorted(df['ano'].unique())\n",
+        "anos_selecionados = st.sidebar.multiselect(\"Ano\", anos_disponiveis, default=anos_disponiveis)\n",
+        "\n",
+        "# Filtro de Senioridade\n",
+        "senioridades_disponiveis = sorted(df['senioridade'].unique())\n",
+        "senioridades_selecionadas = st.sidebar.multiselect(\"Senioridade\", senioridades_disponiveis, default=senioridades_disponiveis)\n",
+        "\n",
+        "# Filtro por Tipo de Contrato\n",
+        "contratos_disponiveis = sorted(df['contrato'].unique())\n",
+        "contratos_selecionados = st.sidebar.multiselect(\"Tipo de Contrato\", contratos_disponiveis, default=contratos_disponiveis)\n",
+        "\n",
+        "# Filtro por Tamanho da Empresa\n",
+        "tamanhos_disponiveis = sorted(df['tamanho_empresa'].unique())\n",
+        "tamanhos_selecionados = st.sidebar.multiselect(\"Tamanho da Empresa\", tamanhos_disponiveis, default=tamanhos_disponiveis)\n",
+        "\n",
+        "# --- Filtragem do DataFrame ---\n",
+        "# O dataframe principal é filtrado com base nas seleções feitas na barra lateral.\n",
+        "df_filtrado = df[\n",
+        "    (df['ano'].isin(anos_selecionados)) &\n",
+        "    (df['senioridade'].isin(senioridades_selecionadas)) &\n",
+        "    (df['contrato'].isin(contratos_selecionados)) &\n",
+        "    (df['tamanho_empresa'].isin(tamanhos_selecionados))\n",
+        "]\n",
+        "\n",
+        "# --- Conteúdo Principal ---\n",
+        "st.title(\"🎲 Dashboard de Análise de Salários na Área de Dados\")\n",
+        "st.markdown(\"Explore os dados salariais na área de dados nos últimos anos. Utilize os filtros à esquerda para refinar sua análise.\")\n",
+        "\n",
+        "# --- Métricas Principais (KPIs) ---\n",
+        "st.subheader(\"Métricas gerais (Salário anual em USD)\")\n",
+        "\n",
+        "if not df_filtrado.empty:\n",
+        "    salario_medio = df_filtrado['usd'].mean()\n",
+        "    salario_maximo = df_filtrado['usd'].max()\n",
+        "    total_registros = df_filtrado.shape[0]\n",
+        "    cargo_mais_frequente = df_filtrado[\"cargo\"].mode()[0]\n",
+        "else:\n",
+        "    salario_medio, salario_maximo, total_registros, cargo_mais_frequente = 0, 0, 0, \"\"\n",
+        "\n",
+        "col1, col2, col3, col4 = st.columns(4)\n",
+        "col1.metric(\"Salário médio\", f\"{salario_medio:,.0f}\")\n",
+        "col2.metric(\"Salário máximo\", f\"{salario_maximo:,.0f}\")\n",
+        "col3.metric(\"Total de registros\", f\"{total_registros:,}\")\n",
+        "col4.metric(\"Cargo mais frequente\", cargo_mais_frequente)\n",
+        "\n",
+        "st.markdown(\"---\")\n",
+        "\n",
+        "# --- Análises Visuais com Plotly ---\n",
+        "st.subheader(\"Gráficos\")\n",
+        "\n",
+        "col_graf1, col_graf2 = st.columns(2)\n",
+        "\n",
+        "with col_graf1:\n",
+        "    if not df_filtrado.empty:\n",
+        "        top_cargos = df_filtrado.groupby('cargo')['usd'].mean().nlargest(10).sort_values(ascending=True).reset_index()\n",
+        "        grafico_cargos = px.bar(\n",
+        "            top_cargos,\n",
+        "            x='usd',\n",
+        "            y='cargo',\n",
+        "            orientation='h',\n",
+        "            title=\"Top 10 cargos por salário médio\",\n",
+        "            labels={'usd': 'Média salarial anual (USD)', 'cargo': ''}\n",
+        "        )\n",
+        "        grafico_cargos.update_layout(title_x=0.1, yaxis={'categoryorder':'total ascending'})\n",
+        "        st.plotly_chart(grafico_cargos, width='stretch')\n",
+        "    else:\n",
+        "        st.warning(\"Nenhum dado para exibir no gráfico de cargos.\")\n",
+        "\n",
+        "with col_graf2:\n",
+        "    if not df_filtrado.empty:\n",
+        "        grafico_hist = px.histogram(\n",
+        "            df_filtrado,\n",
+        "            x='usd',\n",
+        "            nbins=30,\n",
+        "            title=\"Distribuição de salários anuais\",\n",
+        "            labels={'usd': 'Faixa salarial (USD)', 'count': ''}\n",
+        "        )\n",
+        "        grafico_hist.update_layout(title_x=0.1)\n",
+        "        st.plotly_chart(grafico_hist, width='stretch')\n",
+        "    else:\n",
+        "        st.warning(\"Nenhum dado para exibir no gráfico de distribuição.\")\n",
+        "\n",
+        "col_graf3, col_graf4 = st.columns(2)\n",
+        "\n",
+        "with col_graf3:\n",
+        "    if not df_filtrado.empty:\n",
+        "        remoto_contagem = df_filtrado['remoto'].value_counts().reset_index()\n",
+        "        remoto_contagem.columns = ['tipo_trabalho', 'quantidade']\n",
+        "        grafico_remoto = px.pie(\n",
+        "            remoto_contagem,\n",
+        "            names='tipo_trabalho',\n",
+        "            values='quantidade',\n",
+        "            title='Proporção dos tipos de trabalho',\n",
+        "            hole=0.5\n",
+        "        )\n",
+        "        grafico_remoto.update_traces(textinfo='percent+label')\n",
+        "        grafico_remoto.update_layout(title_x=0.1)\n",
+        "        st.plotly_chart(grafico_remoto, width='stretch')\n",
+        "    else:\n",
+        "        st.warning(\"Nenhum dado para exibir no gráfico dos tipos de trabalho.\")\n",
+        "\n",
+        "with col_graf4:\n",
+        "    if not df_filtrado.empty:\n",
+        "        df_ds = df_filtrado[df_filtrado['cargo'] == 'Data Scientist']\n",
+        "        if not df_ds.empty:\n",
+        "            media_ds_pais = df_ds.groupby('residencia')['usd'].mean().reset_index()\n",
+        "            grafico_paises = px.choropleth(\n",
+        "                media_ds_pais,\n",
+        "                locations='residencia',\n",
+        "                color='usd',\n",
+        "                color_continuous_scale='rdylgn',\n",
+        "                title='Salário médio de Cientista de Dados por país',\n",
+        "                labels={'usd': 'Salário médio (USD)', 'residencia': 'País'}\n",
+        "            )\n",
+        "            grafico_paises.update_layout(title_x=0.1)\n",
+        "            st.plotly_chart(grafico_paises, width='stretch')\n",
+        "        else:\n",
+        "            st.warning(\"Nenhum dado de Cientista de Dados para exibir no gráfico de países.\")\n",
+        "    else:\n",
+        "        st.warning(\"Nenhum dado para exibir no gráfico de países.\")\n",
+        "\n",
+        "st.subheader(\"Dados Detalhados\")\n",
+        "st.dataframe(df_filtrado)\n",
+        "\n",
+        "with open(\"app.py\", \"w\") as file:\n",
+        "    file.write(code)\n",
+        "\n",
+        "print(\"Arquivo app.py criado com sucesso!\")"
+      ],
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "!streamlit run /content/app.py &>/content/logs.txt & npx localtunnel --port 8501 & curl ipv4.icanhazip.com"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "yigPLOJABc5d",
+        "outputId": "72bc322d-500b-4c54-d2c3-839538305e62"
+      },
+      "execution_count": 54,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "136.110.51.129\n",
+            "\u001b[1G\u001b[0K⠙\u001b[1G\u001b[0K⠹\u001b[1G\u001b[0K⠸\u001b[1G\u001b[0K⠼\u001b[1G\u001b[0K⠴\u001b[1G\u001b[0K⠦\u001b[1G\u001b[0K⠧\u001b[1G\u001b[0K⠇\u001b[1G\u001b[0K⠏\u001b[1G\u001b[0K⠋\u001b[1G\u001b[0K⠙\u001b[1G\u001b[0K⠹\u001b[1G\u001b[0K⠸\u001b[1G\u001b[0K⠼\u001b[1G\u001b[0K\u001b[1G\u001b[0JNeed to install the following packages:\n",
+            "localtunnel@2.0.2\n",
+            "Ok to proceed? (y) \u001b[20G"
+          ]
+        }
+      ]
+    }
+  ]
+}
